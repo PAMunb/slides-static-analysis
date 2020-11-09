@@ -1,0 +1,147 @@
+\begin{frame}
+  \begin{huge}
+    Reach definition
+  \end{huge}
+  \pause
+
+  \vskip+1.5em
+  
+  \begin{itemize}
+   \item Application in different areas, including {\color{blue}tainted analysis}.
+   \item Allows the construction of \emph{def-use} and \emph{use-def} chains. These
+     chains facilitate several optmizing transformations. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reach Definition Algorithm}
+
+  \begin{block}{Informal definition}
+   For every vertice \texttt{(from, to)} in the control flow,
+   we check if \texttt{assignment(v, exp) := to} holds (\texttt{to} is
+   an assignment).\pause If this is the case, we remove all sets of  definitions that
+   assign a value to \texttt{v} ({\color{blue}Kill}) from the abstraction, and expose a new
+   definition of \texttt{v} at statement \texttt{t} ({\color{blue}Gen}).
+   If \texttt{to} is not a definition (an assignment), than we just propagate the
+   sets of definitions that arrive at \texttt{to}.
+  \end{block} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Reach Definition Algorithm}
+
+  \begin{block}{Equations}
+    \begin{itemize}
+    \item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+    \item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+\begin{block}{Iterative algorithm}
+\begin{small}
+\begin{verbatim}
+// initialization
+Out(Start) = {};
+for(s in stmts) do Out(s) = {} 
+
+while(changes to any out occurs) do  // until achieving a fixed point
+  for(s in stmts)
+    // compute In(s) 
+    // compute Out(s)   
+\end{verbatim}
+\end{small}
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 1} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+	    \item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.4\textwidth}
+    \vspace{0pt}
+    \input{images/cfg01}
+    \end{column}
+    \begin{column}[T]{.6\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+1  & \{ \} & \{(y,1)\} \pause \\ \hline
+2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
+3  & \{(y,1), (z,2)\} & \{(y,1), (z,2)\} \pause \\ \hline
+4  & \{(y,1), (z,2)\} & \{(y,1), (z,4)\} \pause \\ \hline
+5  & \{(y,1), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
+6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}[fragile, t]
+	\frametitle{Iteration 2 (fixed point)} 
+	
+	\begin{center}
+		\begin{scriptsize}
+			\begin{minipage}{8cm}
+				\begin{block}{Equations}
+					\begin{itemize}
+						\item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+						\item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+					\end{itemize}
+				\end{block}
+			\end{minipage}
+		\end{scriptsize}
+	\end{center}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.3\textwidth}
+			\vspace{0pt}
+			\input{images/cfg01}
+		\end{column}
+		\begin{column}[T]{.7\textwidth}
+			\vspace{0pt}    
+			\begin{scriptsize}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline
+						n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \{ \} & \{(y,1)\} \pause \\ \hline
+						2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
+						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \pause \\ \hline
+						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \pause \\ \hline
+						5  & \{(y,1), (y,5), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
+						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{scriptsize}
+		\end{column}
+		%\hfill
+		
+	\end{columns}
+	
+\end{frame}   

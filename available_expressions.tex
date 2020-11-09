@@ -1,0 +1,185 @@
+\begin{frame}
+  \begin{huge}
+    Available expressions
+  \end{huge}
+  \pause
+
+  \vskip+1.5em
+  
+  \begin{itemize}
+  \item Given a program point $u$, this algorithm identifies
+    the expressions whose results at $u$ are the same as their
+    previously computed values (regardless of the execution paths
+    that reach $u$)~\cite{df-book}. 
+
+  \item An expression \texttt{x + y} is available at a program point $u$
+    if {\color{blue}every path} from the start node to $u$ evaluates \texttt{x + y},
+    and after the last evaluation there is no subsequent assignment either to
+    \texttt{x} or \texttt{y}~\cite{compilers-book}. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Questions:
+
+  \begin{itemize}
+   \item what is the ``shape'' of the {\color{blue}abstraction} data type ? \pause
+   \item what {\color{blue}meet} operator is the best fit for our problem?
+   \item what {\color{blue}CFG} should we use (forward or backward)?   
+   \item how would you define the {\color{blue}Gen} and {\color{blue}Kill} functions?   
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Available Expressions}
+
+  \begin{block}{Informal definition}
+   For every vertice \texttt{(from, to)} in the control flow,
+   we check if \texttt{assignment(v, exp) := to} holds (\texttt{to} is
+   an assignment).\pause If this is the case, we remove all expressions that
+   use the variable \texttt{v} ({\color{blue}Kill}) from the abstraction. For every
+   statement, we include ({color{blue}Gen}) into the abstraction every (complex)
+   expression that uses a variable. 
+  \end{block} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Available Expressions} 
+
+  \begin{block}{Equations}
+    \begin{itemize}
+    \item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+    \item $In(s) = \bigcap_p Out(p), p \in pred(s), s \in stmts$
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+\begin{block}{Iterative algorithm}
+\begin{small}
+\begin{verbatim}
+// initialization
+Out(Start) = {};
+for(s in stmts) do Out(s) = U   // all complex expressions
+
+while(changes to any out occur) do  
+  for(s in stmts)
+    // compute In(s) 
+    // compute Out(s)   
+\end{verbatim}
+\end{small}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Consider the example from~\cite{ppa-book}}
+
+    \begin{columns}
+    \column[t]{0.5\textwidth}
+Example 02 (WHILE language)
+    
+\begin{verbatim}
+x := a + b;           (1)
+y := a * b;           (2)
+while(y > a + b) do   (3)
+  a := a + 1;         (4) 
+  x := a + b;         (5) 
+\end{verbatim}
+
+\column[t]{0.5\textwidth}
+\pause Control Flow Graph
+\input{images/cfg02}
+\end{columns}
+  
+\end{frame}
+
+
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 1} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+	    \item $In(s) = \bigcap_p Out(p), p \in pred(s), s \in stmts$
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.5\textwidth}
+    \vspace{0pt}
+    \input{images/cfg02}
+    \end{column}
+    \begin{column}[T]{.5\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+1  &  \{ \}               & \{ a + b \}        \pause \\ \hline
+2  &  \{ a + b \}         & \{ a + b, a * b \} \pause \\ \hline
+3  &  \{ a + b, a * b \}  & \{ a + b, a * b \} \pause \\ \hline
+4  &  \{ a + b, a * b \}  & \{ \}              \pause \\ \hline
+5  &  \{ \}               & \{ a + b \}        \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 2 (fixed point)} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+	    \item $In(s) = \bigcap_p Out(p), p \in pred(s), s \in stmts$
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.5\textwidth}
+    \vspace{0pt}
+    \input{images/cfg02}
+    \end{column}
+    \begin{column}[T]{.5\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+1  &  \{ \}        & \{ a + b \}        \pause \\ \hline
+2  &  \{ a + b \}  & \{ a + b, a * b \} \pause \\ \hline
+3  &  \{ a + b \}  & \{ a + b \}        \pause \\ \hline
+4  &  \{ a + b \}  & \{ \}              \pause \\ \hline
+5  &  \{ \}        & \{ a + b \}        \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+\end{frame}

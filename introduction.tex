@@ -1,0 +1,75 @@
+\begin{frame}
+  \frametitle{(Section 1.1) Program Analysis}
+
+  \begin{block}{Goal}
+    Predict {\color{blue}safe} and {\color{blue}computable approximations} of the possible
+    behaviours that arise at runtime when executing a program. \pause
+    Usage Scenarios:
+    \begin{itemize}
+     \item program optimization
+     \item program transformation
+     \item program design metrics
+     \item program security
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{(Section 1.2) The While Language}
+
+  \begin{block}{Features}
+    \begin{itemize}
+     \item tiny (imperative) programming language
+     \item integer and boolean expressions  
+     \item conditionals and loops \pause
+     \item every statement has a unique label  
+    \end{itemize}
+  \end{block}
+
+  \begin{itemize}
+    \item running example: reach definitions. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{(Section 1.4) An introduction to DataFlow Analysis}
+
+  \begin{enumerate}
+    \item The program is modeled as a (control-flow) graph: the nodes are the
+  the elementary blocks (statements) and the edges describe how the
+  control might pass from one statement to another.
+
+    \item We define functions to every node, so that data flow information
+      can be computed using pairs of Gen and Kill abstractions---considering the
+      information produced in the previou(s) node(s). What should we do
+      at merge nodes?
+  \end{enumerate}
+
+  \pause Computing a solution for a dataflow problem often
+  requires multiple iteractions, where every new iteration
+  provides a better approximation (monotone framework).
+  The iteration continues until achieving a {\color{blue}fixpoint}.
+  \pause $f(s) = s$
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Running Example}
+  
+  \begin{columns}
+    \column[t]{0.45\textwidth}
+Example 01 (While language)
+    
+\begin{verbatim}
+y := x;           (1)
+z := 1;           (2)
+while(y > 1) do   (3)
+  z := z * y;     (4) 
+  y := y - 1;     (5) 
+y := 0;           (6) 
+\end{verbatim}
+\column[t]{0.55\textwidth}
+\pause Control Flow Graph
+\input{images/cfg01}
+\end{columns}
+\end{frame}

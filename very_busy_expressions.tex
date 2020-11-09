@@ -1,0 +1,282 @@
+\begin{frame}
+  \begin{huge}
+    Very busy expressions
+  \end{huge}
+  
+  \pause
+  
+  \vskip+1.5em
+  
+  \begin{itemize}
+  	\item Anticipable Expressions Analysis: An expression $e \in Expr$ (binary arithmetic expression)
+  	is anticipable at a program point $u$ if every path from $u$ to $End$ contains a computation 
+  	of $e$ which is not preceded by an assignment to any operand of $e$~\cite{df-book}. 
+  	
+  	\item An expression is very busy at the exit from a label if, no matter what path
+  	is taken from the label, the expression must always be used before any of the
+  	variables occurring in it are redefined.~\cite{ppa-book}. 
+  \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame}
+	Questions:
+	
+	\begin{itemize}
+		\item what is the ``shape'' of the {\color{blue}abstraction} data type ? \pause
+		\item what {\color{blue}meet} operator is the best fit for our problem?
+		\item what {\color{blue}CFG} should we use (forward or backward)?   
+		\item how would you define the {\color{blue}Gen} and {\color{blue}Kill} functions?   
+	\end{itemize}
+	
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+	\frametitle{Very Busy Expressions Algorithm}
+	
+	\begin{block}{Equations}
+		\begin{itemize}
+			\item $Out(s) = \bigcap_p In(p), p \in successors(s), s \in stmts$
+			\item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+		\end{itemize}
+	\end{block}
+	
+	\pause
+	
+	\begin{block}{Iterative algorithm}
+		\begin{small}
+			\begin{verbatim}
+			// initialization
+			Un = set of all binary arithmetic expression
+			Out(End) = {};
+			for(s in stmts) do Out(s) = Un
+			
+			while(changes to any out occurs) do  
+			// until achieving a fixed point
+			   for(s in stmts)
+			   // compute In(s) 
+			   // compute Out(s)   
+			\end{verbatim}
+		\end{small}
+	\end{block}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+    \begin{columns}
+    \column[t]{0.5\textwidth}
+    Control Flow Graph
+    \input{images/vb_while}
+    
+    
+    \column[t]{0.5\textwidth}
+Example 04 (WHILE language)
+    
+\begin{verbatim}
+if(a != b) then  (1)
+  x := b - a;    (2)
+  y := a - b;    (3)
+else    
+  y := b - a;    (4) 
+  a = 0;         (5) 
+  x = a- b;      (6) 
+\end{verbatim}
+
+
+\end{columns}
+  
+\end{frame}
+
+
+
+\begin{frame}[fragile, t]
+	\frametitle{Iteration 0} 
+	
+	\begin{center}
+		\begin{scriptsize}
+			\begin{minipage}{8cm}
+				\begin{block}{Equations}
+					\begin{itemize}
+						\item $Out(s) = \bigcap_p In(p), p \in successors(s), s \in stmts$
+						\item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+					\end{itemize}
+				\end{block}
+			\end{minipage}
+		\end{scriptsize}
+	\end{center}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.5\textwidth}
+			\vspace{0pt}
+			\input{images/vb_while}
+		\end{column}
+		\begin{column}[T]{.5\textwidth}
+			\vspace{30pt}    
+			\begin{scriptsize}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline
+						n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						6  & \{ \} & \{ a - b, b - a \}  \\ \hline
+						5  & \{ \} & \{ a - b, b - a \}  \\ \hline
+						4  & \{ \} & \{ a - b, b - a \}  \\ \hline
+						3  & \{ \} & \{ a - b, b - a \}  \\ \hline
+						2  & \{ \} & \{ a - b, b - a \} \\ \hline
+						1  & \{ \} & \{ \} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{scriptsize}
+		\end{column}
+		%\hfill
+		
+	\end{columns}
+	
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 1} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $Out(s) = \bigcap_p In(p), p \in successors(s), s \in stmts$
+	    \item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.4\textwidth}
+    \vspace{0pt}
+    \input{images/vb_while}
+    \end{column}
+    \begin{column}[T]{.6\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+6  & \{ a - b \} & \{ \} \pause \\ \hline
+5  & \{ \} & \{a - b\} \pause \\ \hline
+4  & \{ b - a \} & \{ \} \pause \\ \hline
+3  & \{ a - b \} & \{ \} \pause \\ \hline
+2  & \{ a - b, b - a \} & \{ a - b \}\pause \\ \hline
+1  & \{ b - a \} & \{  \}\pause \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}[fragile]
+    \begin{columns}
+    \column[t]{0.5\textwidth}
+Example 05 (Jimple (simplified))
+    
+\begin{verbatim}
+  if(a = b) goto label1 (1)
+  x := b - a;           (2)
+  y := a - b;           (3)
+  goto label2           (7)
+label 1:
+  y := b - a;           (4) 
+  a = 0;                (5) 
+  x = a- b;             (6)
+label 2:
+  return;               (8)
+\end{verbatim}
+
+\column[t]{0.5\textwidth}
+Control Flow Graph
+\input{images/vb}
+\end{columns}
+  
+\end{frame}
+
+
+
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 1} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $Out(s) = \bigcap_p In(p), p \in successors(s), s \in stmts$
+	    \item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.5\textwidth}
+    \vspace{0pt}
+    \input{images/vb}
+    \end{column}
+    \begin{column}[T]{.5\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+8  & \{ \} & \{ \} \pause \\ \hline
+7  & \{ \} & \{ \} \pause \\ \hline
+6  & \{ \} & \{ \} \pause \\ \hline
+5  & \{ \} & \{ \} \pause \\ \hline
+4  & \{ \} & \{ \} \pause \\ \hline
+3  & \{ \} & \{ \} \pause \\ \hline
+2  & \{ \} & \{ \} \pause \\ \hline
+1  & \{ \} & \{ \} \pause \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+\end{frame}

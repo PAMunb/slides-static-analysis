@@ -1,0 +1,141 @@
+\begin{frame}
+  \begin{huge}
+    Live variable analysis
+  \end{huge}
+  \pause
+
+  \vskip+1.5em
+  
+  \begin{itemize}
+  \item A variable $v$ is live at the exit of a statement $s$ 
+    if there is a path from $s$ (that defines $v$) to another
+    statement $u$ that uses the variable $v$; and along this
+    path, there is no other assignment to variable $v$. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Questions:
+
+  \begin{itemize}
+   \item what is the ``shape'' of the {\color{blue}abstraction} data type? \pause
+   \item what {\color{blue}meet} operator is the best fit for our problem? \pause 
+   \item what {\color{blue}CFG} should we use (forward or backward)? \pause
+   \item how would you define the {\color{blue}Gen} and {\color{blue}Kill} functions?   
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Live Variable}
+
+  \begin{block}{Informal definition}
+   For every vertice \texttt{(from, to)} in the control flow,
+   we check if \texttt{assignment(v, exp) := from} holds (\texttt{from} is
+   an assignment).\pause If this is the case, we do not expose
+   upwards the need of a previous definition of \texttt{v} (unless \texttt{v}
+   also appears in \texttt{exp}). Otherwise, we expose upwards every
+   variable that \texttt{from} uses. 
+  \end{block} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Live Variable Algorithm}
+
+  \begin{block}{Equations}
+    \begin{itemize}
+    \item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+    \item $Out(s) = \bigcup_p In(p), p \in successors(s), s \in stmts$
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+\begin{block}{Iterative algorithm}
+\begin{small}
+\begin{verbatim}
+// initialization
+In(End) = {};
+for(s in stmts) do Out(s) = {}   // all complex expressions
+
+while(changes to any in occur) do  
+  for(s in stmts)
+    // compute Out(s)   
+    // compute In(s) 
+\end{verbatim}
+\end{small}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Consider the example from~\cite{ppa-book}}
+
+    \begin{columns}
+    \column[t]{0.5\textwidth}
+Example 03 (While language)
+    
+\begin{verbatim}
+x := 2;           (1)
+y := 4;           (2)
+x := 1;           (3)
+if(y > x) then    (4)
+  z := y;         (5) 
+else   
+  z := y * y;     (6) 
+x := z;           (7)
+\end{verbatim}
+
+\column[t]{0.5\textwidth}
+\pause Control Flow Graph
+\input{images/cfg03}
+\end{columns}
+  
+\end{frame}
+
+\begin{frame}[fragile, t]
+ \frametitle{Iteration 1 (fixed point)} 
+
+\begin{center}
+\begin{scriptsize}
+\begin{minipage}{8cm}
+    \begin{block}{Equations}
+    \begin{itemize}
+        \item $In(s) = Gen(s) \cup (Out(s) - Kill(s))$  
+        \item $Out(s) = \bigcup_p In(p), p \in successors(s), s \in stmts$
+    \end{itemize}
+    \end{block}
+\end{minipage}
+\end{scriptsize}
+\end{center}
+
+\begin{columns}[T]
+\begin{column}[T]{.5\textwidth}
+    \vspace{0pt}
+    \input{images/cfg03}
+    \end{column}
+    \begin{column}[T]{.5\textwidth}
+\vspace{30pt}    
+	\begin{scriptsize}
+	   \begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+7  &   \{ z \}         &   \{ \}        \pause \\ \hline
+6  &   \{ y \}        &     \{ z \}      \pause \\ \hline
+5  &   \{ y \}        &    \{ z \}       \pause \\ \hline
+4  &   \{ x, y \}        &   \{ y \}        \pause \\ \hline
+3  &   \{ y \}        &  \{ x, y\}         \pause \\ \hline
+2  &    \{  \}       &    \{ y \}       \pause \\ \hline
+1  &   \{  \}          &   \{  \}          \pause \\ \hline
+\end{tabular}
+\end{table}   
+	\end{scriptsize}
+	\end{column}
+%\hfill
+    
+\end{columns}
+
+
+\end{frame}
+
