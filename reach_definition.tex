@@ -90,7 +90,7 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 3  & \{(y,1), (z,2)\} & \{(y,1), (z,2)\} \pause \\ \hline
 4  & \{(y,1), (z,2)\} & \{(y,1), (z,4)\} \pause \\ \hline
 5  & \{(y,1), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
-6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+6  & \{(y,1), (z,2)\} & \{(y,6), (z,2)\} \\ \hline
 \end{tabular}
 \end{table}   
 	\end{scriptsize}
@@ -102,8 +102,57 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 \end{frame}
 
 
+
+
 \begin{frame}[fragile, t]
-	\frametitle{Iteration 2 (fixed point)} 
+	\frametitle{Iteration 2} 
+	
+	\begin{center}
+		\begin{scriptsize}
+			\begin{minipage}{8cm}
+				\begin{block}{Equations}
+					\begin{itemize}
+						\item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+						\item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+					\end{itemize}
+				\end{block}
+			\end{minipage}
+		\end{scriptsize}
+	\end{center}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.4\textwidth}
+			\vspace{0pt}
+			\input{images/cfg01}
+		\end{column}
+		\begin{column}[T]{.6\textwidth}
+			\vspace{30pt}    
+			\begin{scriptsize}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline
+						n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \{ \} & \{(y,1)\} \pause \\ \hline
+						2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
+						3  & \{(y,1), (z,2)\} & \{(y,1), (z,2)\} \pause \\ \hline
+						4  & \{(y,1), (z,2)\} & \{(y,1), (z,4)\} \pause \\ \hline
+						5  & \{(y,1), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
+						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{scriptsize}
+		\end{column}
+		%\hfill
+		
+	\end{columns}
+	
+\end{frame}
+
+
+
+
+\begin{frame}[fragile, t]
+	\frametitle{Iteration 3 (fixed point)} 
 	
 	\begin{center}
 		\begin{scriptsize}
