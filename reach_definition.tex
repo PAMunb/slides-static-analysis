@@ -21,7 +21,7 @@
    we check if \texttt{assignment(v, exp) := to} holds (\texttt{to} is
    an assignment).\pause If this is the case, we remove all sets of  definitions that
    assign a value to \texttt{v} ({\color{blue}Kill}) from the abstraction, and expose a new
-   definition of \texttt{v} at statement \texttt{t} ({\color{blue}Gen}).
+   definition of \texttt{v} at statement \texttt{to} ({\color{blue}Gen}).
    If \texttt{to} is not a definition (an assignment), than we just propagate the
    sets of definitions that arrive at \texttt{to}.
   \end{block} 
