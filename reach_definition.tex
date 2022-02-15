@@ -86,12 +86,12 @@ while(changes to any out occurs) do
 \begin{tabular}{|l|l|l|}
 \hline
 n & IN{[}n{]} & OUT{[}n{]} \\ \hline
-1  & \{ \} & \{(y,1)\} \pause \\ \hline
-2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
-3  & \{(y,1), (z,2)\} & \{(y,1), (z,2)\} \pause \\ \hline
-4  & \{(y,1), (z,2)\} & \{(y,1), (z,4)\} \pause \\ \hline
-5  & \{(y,1), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
-6  & \{(y,1), (z,2)\} & \{(y,6), (z,2)\} \\ \hline
+1  & \pause \{ \}            & \pause \{(y,1)\} \\ \hline
+2  & \pause \{(y,1)\}        & \pause \{(y,1), (z,2)\} \\ \hline
+3  & \pause \{(y,1), (z,2)\} & \pause \{(y,1), (z,2)\} \\ \hline
+4  & \pause \{(y,1), (z,2)\} & \pause \{(y,1), (z,4)\} \\ \hline
+5  & \pause \{(y,1), (z,4)\} & \pause \{(y,5), (z,4)\} \\ \hline
+6  & \pause \{(y,1), (z,2)\} & \pause \{(y,6), (z,2)\} \\ \hline
 \end{tabular}
 \end{table}   
 	\end{scriptsize}
@@ -108,6 +108,10 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 \begin{frame}[fragile, t]
 	\frametitle{Iteration 2} 
 	
+	\vspace{-1cm}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.6\textwidth}
 	\begin{center}
 		\begin{scriptsize}
 			\begin{minipage}{8cm}
@@ -120,6 +124,26 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 			\end{minipage}
 		\end{scriptsize}
 	\end{center}
+\end{column}
+\begin{column}[T]{.4\textwidth}
+	\begin{tiny}
+		   \begin{table}[]
+		\begin{tabular}{|l|l|l|}
+			\hline			
+			\multicolumn{3}{|c|}{Iteration 1}\\
+			\hline
+			n & IN{[}n{]} & OUT{[}n{]} \\ \hline
+			1  & \{ \}            & \{(y,1)\} \\ \hline
+			2  & \{(y,1)\}        & \{(y,1), (z,2)\} \\ \hline
+			3  & \{(y,1), (z,2)\} & \{(y,1), (z,2)\} \\ \hline
+			4  & \{(y,1), (z,2)\} & \{(y,1), (z,4)\} \\ \hline
+			5  & \{(y,1), (z,4)\} & \{(y,5), (z,4)\} \\ \hline
+			6  & \{(y,1), (z,2)\} & \{(y,6), (z,2)\} \\ \hline
+		\end{tabular}
+	\end{table}   
+\end{tiny}
+\end{column}
+	\end{columns}
 	
 	\begin{columns}[T]
 		\begin{column}[T]{.3\textwidth}
@@ -132,13 +156,13 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 				\begin{table}[]
 					\begin{tabular}{|l|l|l|}
 						\hline
-						n & IN{[}n{]} & OUT{[}n{]} \\ \hline
-						1  & \{ \} & \{(y,1)\} \pause \\ \hline
-						2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
-						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \pause \\ \hline
-						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \pause \\ \hline
-						5  & \{(y,1), (y,5), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
-						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+						n  & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \pause \{ \}                          & \pause \{(y,1)\} \\ \hline
+						2  & \pause \{(y,1)\}                      & \pause \{(y,1), (z,2)\} \\ \hline
+						3  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,1), (z,2), (y,5), (z,4)\} \\ \hline
+						4  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,1), (y,5), (z,4)\} \\ \hline
+						5  & \pause \{(y,1), (y,5), (z,4)\}        & \pause \{(y,5), (z,4)\} \\ \hline
+						6  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,6), (z,2), (z,4)\} \\ \hline
 					\end{tabular}
 				\end{table}   
 			\end{scriptsize}
@@ -153,20 +177,44 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile, t]
-	\frametitle{Iteration 3 (fixed point)} 
+	\frametitle{Iteration 3} 
 	
-	\begin{center}
-		\begin{scriptsize}
-			\begin{minipage}{8cm}
-				\begin{block}{Equations}
-					\begin{itemize}
-						\item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
-						\item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
-					\end{itemize}
-				\end{block}
-			\end{minipage}
-		\end{scriptsize}
-	\end{center}
+	\vspace{-1cm}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.4\textwidth}
+			\begin{center}
+				\begin{tiny}
+					\begin{minipage}{8cm}
+						\begin{block}{Equations}
+							\begin{itemize}
+								\item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+								\item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+							\end{itemize}
+						\end{block}
+					\end{minipage}
+				\end{tiny}
+			\end{center}
+		\end{column}
+		\begin{column}[T]{.6\textwidth}
+			\begin{tiny}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline			
+						\multicolumn{3}{|c|}{Iteration 2}\\
+						\hline
+						n  & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \{ \}                          & \{(y,1)\} \\ \hline
+						2  & \{(y,1)\}                      & \{(y,1), (z,2)\} \\ \hline
+						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \\ \hline
+						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \\ \hline
+						5  & \{(y,1), (y,5), (z,4)\}        & \{(y,5), (z,4)\} \\ \hline
+						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{tiny}
+		\end{column}
+	\end{columns}
 	
 	\begin{columns}[T]
 		\begin{column}[T]{.3\textwidth}
@@ -179,12 +227,83 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 				\begin{table}[]
 					\begin{tabular}{|l|l|l|}
 						\hline
-						n & IN{[}n{]} & OUT{[}n{]} \\ \hline
-						1  & \{ \} & \{(y,1)\} \pause \\ \hline
-						2  & \{(y,1)\} & \{(y,1), (z,2)\} \pause \\ \hline
-						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \pause \\ \hline
-						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \pause \\ \hline
-						5  & \{(y,1), (y,5), (z,4)\} & \{(y,5), (z,4)\} \pause \\ \hline
+						n  & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \pause \{ \}                          & \pause \{(y,1)\} \\ \hline
+						2  & \pause \{(y,1)\}                      & \pause \{(y,1), (z,2)\} \\ \hline
+						3  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,1), (z,2), (y,5), (z,4)\} \\ \hline
+						4  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,1), (y,5), (z,4)\} \\ \hline
+						5  & \pause \{(y,1), (y,5), (z,4)\}        & \pause \{(y,5), (z,4)\} \\ \hline
+						6  & \pause \{(y,1), (z,2), (y,5), (z,4)\} & \pause \{(y,6), (z,2), (z,4)\} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{scriptsize}
+		\end{column}
+		%\hfill
+		
+	\end{columns}
+	
+\end{frame}   
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile, t]
+	\frametitle{Iteration 3 (fixed point)} 
+	
+	\vspace{-1cm}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.4\textwidth}
+			\begin{center}
+				\begin{tiny}
+					\begin{minipage}{8cm}
+						\begin{block}{Equations}
+							\begin{itemize}
+								\item $Out(s) = Gen(s) \cup (In(s) - Kill(s))$  
+								\item $In(s) = \bigcup_p Out(p), p \in pred(s), s \in stmts$
+							\end{itemize}
+						\end{block}
+					\end{minipage}
+				\end{tiny}
+			\end{center}
+		\end{column}
+		\begin{column}[T]{.6\textwidth}
+			\begin{tiny}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline			
+						\multicolumn{3}{|c|}{Iteration 2}\\
+						\hline
+						n  & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \{ \}                          & \{(y,1)\} \\ \hline
+						2  & \{(y,1)\}                      & \{(y,1), (z,2)\} \\ \hline
+						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \\ \hline
+						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \\ \hline
+						5  & \{(y,1), (y,5), (z,4)\}        & \{(y,5), (z,4)\} \\ \hline
+						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
+					\end{tabular}
+				\end{table}   
+			\end{tiny}
+		\end{column}
+	\end{columns}
+	
+	\begin{columns}[T]
+		\begin{column}[T]{.3\textwidth}
+			\vspace{0pt}
+			\input{images/cfg01}
+		\end{column}
+		\begin{column}[T]{.7\textwidth}
+			\vspace{0pt}    
+			\begin{scriptsize}
+				\begin{table}[]
+					\begin{tabular}{|l|l|l|}
+						\hline
+						n  & IN{[}n{]} & OUT{[}n{]} \\ \hline
+						1  & \{ \}                          & \{(y,1)\} \\ \hline
+						2  & \{(y,1)\}                      & \{(y,1), (z,2)\} \\ \hline
+						3  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (z,2), (y,5), (z,4)\} \\ \hline
+						4  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,1), (y,5), (z,4)\} \\ \hline
+						5  & \{(y,1), (y,5), (z,4)\}        & \{(y,5), (z,4)\} \\ \hline
 						6  & \{(y,1), (z,2), (y,5), (z,4)\} & \{(y,6), (z,2), (z,4)\} \\ \hline
 					\end{tabular}
 				\end{table}   
