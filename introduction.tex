@@ -27,7 +27,7 @@
   \end{block}
 
   \begin{itemize}
-    \item running example: reach definitions. 
+    \item running example: reaching definitions. 
   \end{itemize}
 \end{frame}
 
@@ -40,7 +40,7 @@
   control might pass from one statement to another.
 
     \item We define functions to every node, so that data flow information
-      can be computed using pairs of Gen and Kill abstractions---considering the
+      can be computed using pairs of \emph{Gen} and \emph{Kill} abstractions---considering the
       information produced in the previou(s) node(s). What should we do
       at merge nodes?
   \end{enumerate}
@@ -56,9 +56,13 @@
 \begin{frame}[fragile]
   \frametitle{Running Example}
   
+  \begin{center}
+  	\large Example 01: Factorial
+  \end{center}
+  
   \begin{columns}
-    \column[t]{0.45\textwidth}
-Example 01 (While language)
+    \column[t]{0.40\textwidth}
+While language
     
 \begin{verbatim}
 y := x;           (1)
@@ -68,7 +72,7 @@ while(y > 1) do   (3)
   y := y - 1;     (5) 
 y := 0;           (6) 
 \end{verbatim}
-\column[t]{0.55\textwidth}
+\column[t]{0.60\textwidth}
 \pause Control Flow Graph
 \input{images/cfg01}
 \end{columns}

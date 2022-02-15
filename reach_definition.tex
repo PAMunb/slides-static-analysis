@@ -1,6 +1,6 @@
 \begin{frame}
   \begin{huge}
-    Reach definition
+    Reaching Definitions
   \end{huge}
   \pause
 
@@ -14,7 +14,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Reach Definition Algorithm}
+  \frametitle{Reaching Definitions Algorithm}
 
   \begin{block}{Informal definition}
    For every vertice \texttt{(from, to)} in the control flow,
@@ -28,7 +28,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Reach Definition Algorithm}
+  \frametitle{Reaching Definitions Algorithm}
 
   \begin{block}{Equations}
     \begin{itemize}
@@ -46,7 +46,8 @@
 Out(Start) = {};
 for(s in stmts) do Out(s) = {} 
 
-while(changes to any out occurs) do  // until achieving a fixed point
+while(changes to any out occurs) do  
+//do until achieving a fixed point
   for(s in stmts)
     // compute In(s) 
     // compute Out(s)   
@@ -56,7 +57,7 @@ while(changes to any out occurs) do  // until achieving a fixed point
 \end{frame}
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile, t]
  \frametitle{Iteration 1} 
 
@@ -103,7 +104,7 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile, t]
 	\frametitle{Iteration 2} 
 	
@@ -150,7 +151,7 @@ n & IN{[}n{]} & OUT{[}n{]} \\ \hline
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile, t]
 	\frametitle{Iteration 3 (fixed point)} 
 	
